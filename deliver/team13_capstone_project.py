@@ -3,6 +3,9 @@
 
 # # Team13: Capstone project of Python Bootcamp
 # 
+# This is [the Capstone project for Team 13 of the Python Data Analysis Bootcamp](https://github.com/pyladiesams/Bootcamp-Data-Analysis-beginner-apr-may2020/blob/master/Capstone/README.md).
+# We are trying, more or less, to follow the structure of [jupytemplate](https://github.com/xtreamsrl/jupytemplate/blob/master/jupytemplate/jupytemplate/template.ipynb).
+# 
 # ## Purpose
 # 
 # State the purpose of the notebook.
@@ -21,26 +24,33 @@
 # 
 # ## Setup
 
-# In[3]:
+# In[16]:
 
 
 # install system dependencies
+import sys
 import os
 
-get_ipython().system('conda install -c conda-forge --yes pandas jupyterthemes seaborn jupyter_contrib_nbextensions pandoc')
+get_ipython().system('conda install -c conda-forge --yes --prefix {sys.prefix} pandas jupyterthemes seaborn jupyter_contrib_nbextensions pandoc')
 
 
 # ### Library Import
 
-# In[7]:
+# In[96]:
 
 
 # load libraries and setup environment
+# mandatory
 import pandas as pd
-import numpy as np
+
+get_ipython().run_line_magic('matplotlib', 'inline')
 import matplotlib.pyplot as plt
+
+# optional
+import numpy as np
 import seaborn as sns
 from jupyterthemes import jtplot
+from IPython.core.display import HTML
 jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 
 
@@ -50,10 +60,37 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 # 
 # ## Data import
 # We retrieve all the required data for the analysis.
-# 
+
+# In[83]:
+
+
+cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_73059_162758_cost-of-living-2018.csv')
+
+# we are droppping the Rank column because it's entirely empty
+cost_of_living = cost_of_living.drop(columns = 'Rank')
+
+
 # ## Data processing
-# Put here the core of the notebook. Feel free di further split this section into subsections.
 # 
+# ### 1. What are the five cities with the highest/lowest cost of living (incl. rent)?
+
+# In[153]:
+
+
+caption_column = 'City'
+index_column = 'Cost of Living Plus Rent Index'
+
+def display_cost_of_living(costs, title):
+    filtered_costs = costs[[caption_column, index_column]].sort_values(index_column)
+    filtered_costs.plot.barh(title = title, x = caption_column, y = index_column)
+    plt.show()
+    display(filtered_costs.style.hide_index())
+
+# print the ten most expensive cities in the database in 2018
+display_cost_of_living(cost_of_living.nlargest(5, index_column), 'Largest Rent Index')
+display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent Index')
+
+
 # ## References
 # 
 # * [data for the cost of living](https://www.kaggle.com/andytran11996/cost-of-living/)
