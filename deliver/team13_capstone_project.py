@@ -11,11 +11,11 @@
 # 
 # Quickly describe assumptions and processing steps.
 # 
-# ## Improvements
+# ## TODO / Improvements
 # 
-# * Find a dataset that has at least 2 CSV files
-# * Come up with 5 questions that you want to answer while exploring the dataset
-# * Perform EDA (Exploratoty Data Analysis) on your dataset with basic visualisations
+# * [x] Find a dataset that has at least 2 CSV files
+# * [ ] Come up with 5 questions that you want to answer while exploring the dataset
+# * [ ] Perform EDA (Exploratoty Data Analysis) on your dataset with basic visualisations
 # 
 # ## Results
 # 
@@ -55,3 +55,8 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 # Put here the core of the notebook. Feel free di further split this section into subsections.
 # 
 # ## References
+# 
+# * [data for the cost of living](https://www.kaggle.com/andytran11996/cost-of-living/)
+# * [base data for countries of the world](https://www.kaggle.com/fernandol/countries-of-the-world)
+# * [data for life expectancy from the WHO](https://www.kaggle.com/kumarajarshi/life-expectancy-who)
+# * [roshansharma_europe-datasets](https://www.kaggle.com/roshansharma/europe-datasets)
