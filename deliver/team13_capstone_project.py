@@ -61,7 +61,7 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 # ## Data import
 # We retrieve all the required data for the analysis.
 
-# In[83]:
+# In[165]:
 
 
 cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_73059_162758_cost-of-living-2018.csv')
@@ -69,26 +69,47 @@ cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_7305
 # we are droppping the Rank column because it's entirely empty
 cost_of_living = cost_of_living.drop(columns = 'Rank')
 
+life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_231225_493692_life_satisfaction_2013.csv')
+life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
+
+print('successfully imported')
+
 
 # ## Data processing
 # 
 # ### 1. What are the five cities with the highest/lowest cost of living (incl. rent)?
 
-# In[153]:
+# In[173]:
 
 
 caption_column = 'City'
 index_column = 'Cost of Living Plus Rent Index'
 
 def display_cost_of_living(costs, title):
-    filtered_costs = costs[[caption_column, index_column]].sort_values(index_column)
+    filtered_costs = costs[[caption_column, index_column]].sort_values(index_column, ascending = True)
     filtered_costs.plot.barh(title = title, x = caption_column, y = index_column)
     plt.show()
-    display(filtered_costs.style.hide_index())
+    display(filtered_costs.sort_values(index_column, ascending = False).style.hide_index())
 
 # print the ten most expensive cities in the database in 2018
 display_cost_of_living(cost_of_living.nlargest(5, index_column), 'Largest Rent Index')
 display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent Index')
+
+
+# ## 2. What are the five happiest countries in Europe?
+
+# In[174]:
+
+
+index_column = "People with highest life satisfaction [%]"
+caption_column = 'country'
+
+life_satisfaction = life_satisfaction[[caption_column, index_column]]
+life_satisfaction = life_satisfaction.nlargest(5, index_column)
+life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True)
+life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column)
+plt.show()
+display(life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
 
 
 # ## References
