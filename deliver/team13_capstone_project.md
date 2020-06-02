@@ -74,6 +74,7 @@ life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_2
 life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
 
 generic_country_data = pd.read_csv('../data/fernandol_countries-of-the-world/datasets_23752_30346_countries of the world.csv', decimal=',')
+generic_european_country_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False)]
 
 print('successfully imported the datasets.')
 ```
@@ -102,7 +103,7 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_7_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_8_0.png)
 
 
 
@@ -132,7 +133,7 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 
 
 
-![png](team13_capstone_project_files/team13_capstone_project_7_2.png)
+![png](team13_capstone_project_files/team13_capstone_project_8_2.png)
 
 
 
@@ -177,7 +178,7 @@ display(life_satisfaction.sort_values(index_column, ascending = False).style.hid
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_9_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_10_0.png)
 
 
 
@@ -213,11 +214,7 @@ display(life_satisfaction.sort_values(index_column, ascending = False).style.hid
 index_column = "Coastline (coast/area ratio)"
 caption_column = 'Country'
 
-coastline_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False, regex=True)]
-coastline_data = coastline_data[[caption_column, index_column]]
-
-print(coastline_data.info())
-print(coastline_data.head(5))
+coastline_data = generic_european_country_data[[caption_column, index_column]]
 
 coastline_data = coastline_data.nlargest(5, index_column)
 coastline_data = coastline_data.sort_values(index_column, ascending = True)
@@ -226,52 +223,66 @@ plt.show()
 display(coastline_data.sort_values(index_column, ascending = False).style.hide_index())
 ```
 
-    <class 'pandas.core.frame.DataFrame'>
-    Int64Index: 40 entries, 1 to 213
-    Data columns (total 2 columns):
-     #   Column                        Non-Null Count  Dtype  
-    ---  ------                        --------------  -----  
-     0   Country                       40 non-null     object 
-     1   Coastline (coast/area ratio)  40 non-null     float64
-    dtypes: float64(1), object(1)
-    memory usage: 960.0+ bytes
-    None
-                      Country  Coastline (coast/area ratio)
-    1                Albania                           1.26
-    4                Andorra                           0.00
-    12               Austria                           0.00
-    19               Belgium                           0.22
-    25  Bosnia & Herzegovina                           0.04
 
-
-
-![png](team13_capstone_project_files/team13_capstone_project_11_1.png)
+![png](team13_capstone_project_files/team13_capstone_project_12_0.png)
 
 
 
 <style  type="text/css" >
-</style><table id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >Coastline (coast/area ratio)</th>    </tr></thead><tbody>
+</style><table id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >Coastline (coast/area ratio)</th>    </tr></thead><tbody>
                 <tr>
-                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Monaco </td>
-                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >205.000000</td>
+                                <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Monaco </td>
+                        <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >205.000000</td>
             </tr>
             <tr>
-                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Gibraltar </td>
-                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >171.430000</td>
+                                <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Gibraltar </td>
+                        <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >171.430000</td>
             </tr>
             <tr>
-                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Faroe Islands </td>
-                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >79.840000</td>
+                                <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Faroe Islands </td>
+                        <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >79.840000</td>
             </tr>
             <tr>
-                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Guernsey </td>
-                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >64.100000</td>
+                                <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Guernsey </td>
+                        <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >64.100000</td>
             </tr>
             <tr>
-                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Malta </td>
-                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >62.280000</td>
+                                <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Malta </td>
+                        <td id="T_344dd84c_a4d2_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >62.280000</td>
             </tr>
     </tbody></table>
+
+
+## 4. Is there a correlation between happyness and coastline?
+
+
+```python
+index_column = "Coastline (coast/area ratio)"
+caption_column = 'Country'
+
+coastline_data = generic_european_country_data[[caption_column, index_column]]
+
+# select the top countries because we aren't interested in countries without
+# a relevant coastline.
+coastline_data = coastline_data.nlargest(15, index_column)
+
+# sort and add the sorted index as a column
+coastline_data.sort_values(index_column, ascending = True, inplace = True, ignore_index = True)
+coastline_data['index'] = coastline_data.index
+
+sns.lineplot(x = 'index', y = index_column, data = coastline_data)
+
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f3fd028e690>
+
+
+
+
+![png](team13_capstone_project_files/team13_capstone_project_14_1.png)
 
 
 ## References
