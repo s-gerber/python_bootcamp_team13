@@ -73,10 +73,12 @@ cost_of_living = cost_of_living.drop(columns = 'Rank')
 life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_231225_493692_life_satisfaction_2013.csv')
 life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
 
-print('successfully imported')
+generic_country_data = pd.read_csv('../data/fernandol_countries-of-the-world/datasets_23752_30346_countries of the world.csv', decimal=',')
+
+print('successfully imported the datasets.')
 ```
 
-    successfully imported
+    successfully imported the datasets.
 
 
 ## Data processing
@@ -175,43 +177,101 @@ display(life_satisfaction.sort_values(index_column, ascending = False).style.hid
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    KeyError                                  Traceback (most recent call last)
-
-    <ipython-input-174-7c12f16eb9d6> in <module>
-          2 caption_column = 'country'
-          3 
-    ----> 4 life_satisfaction = life_satisfaction[[caption_column, index_column]]
-          5 life_satisfaction = life_satisfaction.nlargest(5, index_column)
-          6 life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True)
+![png](team13_capstone_project_files/team13_capstone_project_9_0.png)
 
 
-    ~/miniconda3/envs/team13/lib/python3.7/site-packages/pandas/core/frame.py in __getitem__(self, key)
-       2804             if is_iterator(key):
-       2805                 key = list(key)
-    -> 2806             indexer = self.loc._get_listlike_indexer(key, axis=1, raise_missing=True)[1]
-       2807 
-       2808         # take() does not accept boolean indexers
+
+<style  type="text/css" >
+</style><table id="T_19f260ac_a442_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >country</th>        <th class="col_heading level0 col1" >People with highest life satisfaction [%]</th>    </tr></thead><tbody>
+                <tr>
+                                <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Denmark</td>
+                        <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >42.700000</td>
+            </tr>
+            <tr>
+                                <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Finland</td>
+                        <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >38.600000</td>
+            </tr>
+            <tr>
+                                <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Switzerland</td>
+                        <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >38.500000</td>
+            </tr>
+            <tr>
+                                <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Iceland</td>
+                        <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >38.100000</td>
+            </tr>
+            <tr>
+                                <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Austria</td>
+                        <td id="T_19f260ac_a442_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >37.900000</td>
+            </tr>
+    </tbody></table>
 
 
-    ~/miniconda3/envs/team13/lib/python3.7/site-packages/pandas/core/indexing.py in _get_listlike_indexer(self, key, axis, raise_missing)
-       1551 
-       1552         self._validate_read_indexer(
-    -> 1553             keyarr, indexer, o._get_axis_number(axis), raise_missing=raise_missing
-       1554         )
-       1555         return keyarr, indexer
+## 3. What are the European countries with the most coast line in relation to their area?
 
 
-    ~/miniconda3/envs/team13/lib/python3.7/site-packages/pandas/core/indexing.py in _validate_read_indexer(self, key, indexer, axis, raise_missing)
-       1644             if not (self.name == "loc" and not raise_missing):
-       1645                 not_found = list(set(key) - set(ax))
-    -> 1646                 raise KeyError(f"{not_found} not in index")
-       1647 
-       1648             # we skip the warning on Categorical/Interval
+```python
+index_column = "Coastline (coast/area ratio)"
+caption_column = 'Country'
+
+coastline_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False, regex=True)]
+coastline_data = coastline_data[[caption_column, index_column]]
+
+print(coastline_data.info())
+print(coastline_data.head(5))
+
+coastline_data = coastline_data.nlargest(5, index_column)
+coastline_data = coastline_data.sort_values(index_column, ascending = True)
+coastline_data.plot.barh(title = 'Countries with the most coast line in relation to their area', x = caption_column, y = index_column)
+plt.show()
+display(coastline_data.sort_values(index_column, ascending = False).style.hide_index())
+```
+
+    <class 'pandas.core.frame.DataFrame'>
+    Int64Index: 40 entries, 1 to 213
+    Data columns (total 2 columns):
+     #   Column                        Non-Null Count  Dtype  
+    ---  ------                        --------------  -----  
+     0   Country                       40 non-null     object 
+     1   Coastline (coast/area ratio)  40 non-null     float64
+    dtypes: float64(1), object(1)
+    memory usage: 960.0+ bytes
+    None
+                      Country  Coastline (coast/area ratio)
+    1                Albania                           1.26
+    4                Andorra                           0.00
+    12               Austria                           0.00
+    19               Belgium                           0.22
+    25  Bosnia & Herzegovina                           0.04
 
 
-    KeyError: "['People with highest life satisfaction [%]'] not in index"
+
+![png](team13_capstone_project_files/team13_capstone_project_11_1.png)
+
+
+
+<style  type="text/css" >
+</style><table id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >Coastline (coast/area ratio)</th>    </tr></thead><tbody>
+                <tr>
+                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Monaco </td>
+                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >205.000000</td>
+            </tr>
+            <tr>
+                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Gibraltar </td>
+                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >171.430000</td>
+            </tr>
+            <tr>
+                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Faroe Islands </td>
+                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >79.840000</td>
+            </tr>
+            <tr>
+                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Guernsey </td>
+                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >64.100000</td>
+            </tr>
+            <tr>
+                                <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Malta </td>
+                        <td id="T_6fdc7aec_a4cf_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >62.280000</td>
+            </tr>
+    </tbody></table>
 
 
 ## References

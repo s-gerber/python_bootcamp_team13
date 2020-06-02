@@ -61,7 +61,7 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 # ## Data import
 # We retrieve all the required data for the analysis.
 
-# In[165]:
+# In[190]:
 
 
 cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_73059_162758_cost-of-living-2018.csv')
@@ -72,7 +72,9 @@ cost_of_living = cost_of_living.drop(columns = 'Rank')
 life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_231225_493692_life_satisfaction_2013.csv')
 life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
 
-print('successfully imported')
+generic_country_data = pd.read_csv('../data/fernandol_countries-of-the-world/datasets_23752_30346_countries of the world.csv', decimal=',')
+
+print('successfully imported the datasets.')
 
 
 # ## Data processing
@@ -98,7 +100,7 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 
 # ## 2. What are the five happiest countries in Europe?
 
-# In[174]:
+# In[176]:
 
 
 index_column = "People with highest life satisfaction [%]"
@@ -110,6 +112,27 @@ life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True
 life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column)
 plt.show()
 display(life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
+
+
+# ## 3. What are the European countries with the most coast line in relation to their area?
+
+# In[195]:
+
+
+index_column = "Coastline (coast/area ratio)"
+caption_column = 'Country'
+
+coastline_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False, regex=True)]
+coastline_data = coastline_data[[caption_column, index_column]]
+
+print(coastline_data.info())
+print(coastline_data.head(5))
+
+coastline_data = coastline_data.nlargest(5, index_column)
+coastline_data = coastline_data.sort_values(index_column, ascending = True)
+coastline_data.plot.barh(title = 'Countries with the most coast line in relation to their area', x = caption_column, y = index_column)
+plt.show()
+display(coastline_data.sort_values(index_column, ascending = False).style.hide_index())
 
 
 # ## References
