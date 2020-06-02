@@ -11,6 +11,7 @@ def post_save(model, os_path, contents_manager):
     d, fname = os.path.split(os_path)
     check_call(['jupyter', 'nbconvert', '--to', 'script', fname], cwd=d)
     check_call(['jupyter', 'nbconvert', '--to', 'markdown', fname], cwd=d)
+    # TODO: slides have some style issues: https://github.com/jupyter/nbviewer/issues/533
     check_call(['jupyter', 'nbconvert', '--to', 'slides', fname], cwd=d)
     check_call(['jupyter', 'nbconvert', '--to', 'pdf', fname], cwd=d)
 

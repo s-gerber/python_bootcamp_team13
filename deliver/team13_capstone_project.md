@@ -60,6 +60,13 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 
 We set all relevant parameters for our notebook. By convention, parameters are uppercase, while all the other variables follow Python's guidelines.
 
+
+```python
+COAST_COLUMN = "Coastline (coast/area ratio)"
+COUNTRY_COLUMN = 'Country'
+SATISFACTION_COLUMN = "People with highest life satisfaction [%]"
+```
+
 ## Data import
 We retrieve all the required data for the analysis.
 
@@ -71,9 +78,13 @@ cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_7305
 cost_of_living = cost_of_living.drop(columns = 'Rank')
 
 life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_231225_493692_life_satisfaction_2013.csv')
-life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
+life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]", "country": "Country" })
+life_satisfaction['Country'] = life_satisfaction['Country'].astype(str)
+life_satisfaction['Country'] = life_satisfaction['Country'].str.strip()
 
 generic_country_data = pd.read_csv('../data/fernandol_countries-of-the-world/datasets_23752_30346_countries of the world.csv', decimal=',')
+generic_country_data['Country'] = generic_country_data['Country'].astype(str)
+generic_country_data['Country'] = generic_country_data['Country'].str.strip()
 generic_european_country_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False)]
 
 print('successfully imported the datasets.')
@@ -103,61 +114,61 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_8_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_10_0.png)
 
 
 
 <style  type="text/css" >
-</style><table id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >City</th>        <th class="col_heading level0 col1" >Cost of Living Plus Rent Index</th>    </tr></thead><tbody>
+</style><table id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >City</th>        <th class="col_heading level0 col1" >Cost of Living Plus Rent Index</th>    </tr></thead><tbody>
                 <tr>
-                                <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Hamilton, Bermuda</td>
-                        <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >128.760000</td>
+                                <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Hamilton, Bermuda</td>
+                        <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >128.760000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >San Francisco, CA, United States</td>
-                        <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >106.290000</td>
+                                <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >San Francisco, CA, United States</td>
+                        <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >106.290000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Zurich, Switzerland</td>
-                        <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >105.030000</td>
+                                <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Zurich, Switzerland</td>
+                        <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >105.030000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Geneva, Switzerland</td>
-                        <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >104.380000</td>
+                                <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Geneva, Switzerland</td>
+                        <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >104.380000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >New York, NY, United States</td>
-                        <td id="T_58368fdc_a4dd_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >100.000000</td>
+                                <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >New York, NY, United States</td>
+                        <td id="T_a52d3ac8_a4ee_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >100.000000</td>
             </tr>
     </tbody></table>
 
 
 
-![png](team13_capstone_project_files/team13_capstone_project_8_2.png)
+![png](team13_capstone_project_files/team13_capstone_project_10_2.png)
 
 
 
 <style  type="text/css" >
-</style><table id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >City</th>        <th class="col_heading level0 col1" >Cost of Living Plus Rent Index</th>    </tr></thead><tbody>
+</style><table id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >City</th>        <th class="col_heading level0 col1" >Cost of Living Plus Rent Index</th>    </tr></thead><tbody>
                 <tr>
-                                <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Bhubaneswar, India</td>
-                        <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >15.140000</td>
+                                <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Bhubaneswar, India</td>
+                        <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >15.140000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Visakhapatnam, India</td>
-                        <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >15.110000</td>
+                                <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Visakhapatnam, India</td>
+                        <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >15.110000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Mysore, India</td>
-                        <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >14.980000</td>
+                                <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Mysore, India</td>
+                        <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >14.980000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Alexandria, Egypt</td>
-                        <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >14.400000</td>
+                                <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Alexandria, Egypt</td>
+                        <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >14.400000</td>
             </tr>
             <tr>
-                                <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Thiruvananthapuram, India</td>
-                        <td id="T_58368fdd_a4dd_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >13.260000</td>
+                                <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Thiruvananthapuram, India</td>
+                        <td id="T_a52d3ac9_a4ee_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >13.260000</td>
             </tr>
     </tbody></table>
 
@@ -167,42 +178,42 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 
 ```python
 index_column = "People with highest life satisfaction [%]"
-caption_column = 'country'
+caption_column = 'Country'
 
-life_satisfaction = life_satisfaction[[caption_column, index_column]]
-life_satisfaction = life_satisfaction.nlargest(5, index_column)
-life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True)
-life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column);
+top_countries_life_satisfaction = life_satisfaction[[caption_column, index_column]]
+top_countries_life_satisfaction = top_countries_life_satisfaction.nlargest(5, index_column)
+top_countries_life_satisfaction = top_countries_life_satisfaction.sort_values(index_column, ascending = True)
+top_countries_life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column);
 plt.show();
-display(life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
+display(top_countries_life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_10_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_12_0.png)
 
 
 
 <style  type="text/css" >
-</style><table id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >country</th>        <th class="col_heading level0 col1" >People with highest life satisfaction [%]</th>    </tr></thead><tbody>
+</style><table id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >People with highest life satisfaction [%]</th>    </tr></thead><tbody>
                 <tr>
-                                <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Denmark</td>
-                        <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >42.700000</td>
+                                <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Denmark</td>
+                        <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >42.700000</td>
             </tr>
             <tr>
-                                <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Finland</td>
-                        <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >38.600000</td>
+                                <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Finland</td>
+                        <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >38.600000</td>
             </tr>
             <tr>
-                                <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Switzerland</td>
-                        <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >38.500000</td>
+                                <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Switzerland</td>
+                        <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >38.500000</td>
             </tr>
             <tr>
-                                <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Iceland</td>
-                        <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >38.100000</td>
+                                <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Iceland</td>
+                        <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >38.100000</td>
             </tr>
             <tr>
-                                <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Austria</td>
-                        <td id="T_1e3377e6_a4dd_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >37.900000</td>
+                                <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Austria</td>
+                        <td id="T_a52d3aca_a4ee_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >37.900000</td>
             </tr>
     </tbody></table>
 
@@ -224,68 +235,56 @@ display(coastline_data.sort_values(index_column, ascending = False).style.hide_i
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_12_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_14_0.png)
 
 
 
 <style  type="text/css" >
-</style><table id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >Coastline (coast/area ratio)</th>    </tr></thead><tbody>
+</style><table id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3" ><thead>    <tr>        <th class="col_heading level0 col0" >Country</th>        <th class="col_heading level0 col1" >Coastline (coast/area ratio)</th>    </tr></thead><tbody>
                 <tr>
-                                <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Monaco </td>
-                        <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >205.000000</td>
+                                <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row0_col0" class="data row0 col0" >Monaco</td>
+                        <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row0_col1" class="data row0 col1" >205.000000</td>
             </tr>
             <tr>
-                                <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Gibraltar </td>
-                        <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >171.430000</td>
+                                <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row1_col0" class="data row1 col0" >Gibraltar</td>
+                        <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row1_col1" class="data row1 col1" >171.430000</td>
             </tr>
             <tr>
-                                <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Faroe Islands </td>
-                        <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >79.840000</td>
+                                <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row2_col0" class="data row2 col0" >Faroe Islands</td>
+                        <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row2_col1" class="data row2 col1" >79.840000</td>
             </tr>
             <tr>
-                                <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Guernsey </td>
-                        <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >64.100000</td>
+                                <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row3_col0" class="data row3 col0" >Guernsey</td>
+                        <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row3_col1" class="data row3 col1" >64.100000</td>
             </tr>
             <tr>
-                                <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Malta </td>
-                        <td id="T_2082ee82_a4dd_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >62.280000</td>
+                                <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row4_col0" class="data row4 col0" >Malta</td>
+                        <td id="T_a52d3acb_a4ee_11ea_9865_2df6e64f41b3row4_col1" class="data row4 col1" >62.280000</td>
             </tr>
     </tbody></table>
 
 
-## 4. Is there a correlation between happyness and coastline?
+## 4. Is there a correlation between happiness and access to a coastline?
 
 
 ```python
-coast_column = "Coastline (coast/area ratio)"
-country_column = 'Country'
+merged = pd.merge(generic_european_country_data, life_satisfaction, on = COUNTRY_COLUMN, how = 'inner')  
 
-coastline_data = generic_european_country_data[[caption_column, index_column]]
+coastline_data = generic_european_country_data[[COAST_COLUMN, COUNTRY_COLUMN]]
 
-# # select the top countries because we aren't interested in countries without
-# # a relevant coastline.
-# coastline_data = coastline_data.nlargest(15, index_column)
-
-# sort and add the sorted index as a column
-coastline_data = coastline_data.sort_values(index_column, ascending = True, ignore_index = True)
-# coastline_data['Country Index'] = coastline_data.index
-
-# sns.lineplot(x = 'Country Index', y = index_column, data = coastline_data);
-
+# sort by coast
+merged = merged.sort_values(COAST_COLUMN, ascending = True, ignore_index = True)
 
 ax = plt.gca()
-coastline_line = coastline_data.plot(kind='line', y = coast_column, x = 'Country' ,ax=ax)
+merged.plot(kind = 'line', y = COAST_COLUMN, x = COUNTRY_COLUMN ,ax=ax)
+merged.plot(kind = 'line', y = SATISFACTION_COLUMN, x = COUNTRY_COLUMN ,ax=ax)
 
-# coast_line, = plt.plot(x, np.sin(x), label=coast_column)
-# country_line, = plt.plot(x, np.cos(x), label=country_column)
-
-# plt.legend(handles=[coast_line, country_line, coastline_line], loc='best')
 plt.grid(b = True, color = 'aqua', alpha = 0.1, linestyle = 'dashdot')
 plt.show();
 ```
 
 
-![png](team13_capstone_project_files/team13_capstone_project_14_0.png)
+![png](team13_capstone_project_files/team13_capstone_project_16_0.png)
 
 
 ## References

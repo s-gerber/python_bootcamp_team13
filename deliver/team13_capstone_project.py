@@ -24,7 +24,7 @@
 
 # ## Setup
 
-# In[16]:
+# In[1]:
 
 
 # install system dependencies
@@ -36,7 +36,7 @@ get_ipython().system('conda install -c conda-forge --yes --prefix {sys.prefix} p
 
 # ### Library Import
 
-# In[251]:
+# In[2]:
 
 
 # load libraries and setup environment
@@ -57,11 +57,19 @@ jtplot.style(theme='monokai', context='notebook', ticks=True, grid=False)
 # ## Parameter definition
 # 
 # We set all relevant parameters for our notebook. By convention, parameters are uppercase, while all the other variables follow Python's guidelines.
-# 
+
+# In[3]:
+
+
+COAST_COLUMN = "Coastline (coast/area ratio)"
+COUNTRY_COLUMN = 'Country'
+SATISFACTION_COLUMN = "People with highest life satisfaction [%]"
+
+
 # ## Data import
 # We retrieve all the required data for the analysis.
 
-# In[198]:
+# In[4]:
 
 
 cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_73059_162758_cost-of-living-2018.csv')
@@ -70,9 +78,13 @@ cost_of_living = pd.read_csv('../data/andytran11996_cost-of-living/datasets_7305
 cost_of_living = cost_of_living.drop(columns = 'Rank')
 
 life_satisfaction = pd.read_csv('../data/roshansharma_europe-datasets/datasets_231225_493692_life_satisfaction_2013.csv')
-life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]" })
+life_satisfaction = life_satisfaction.rename(columns = { "prct_life_satis_high": "People with highest life satisfaction [%]", "country": "Country" })
+life_satisfaction['Country'] = life_satisfaction['Country'].astype(str)
+life_satisfaction['Country'] = life_satisfaction['Country'].str.strip()
 
 generic_country_data = pd.read_csv('../data/fernandol_countries-of-the-world/datasets_23752_30346_countries of the world.csv', decimal=',')
+generic_country_data['Country'] = generic_country_data['Country'].astype(str)
+generic_country_data['Country'] = generic_country_data['Country'].str.strip()
 generic_european_country_data = generic_country_data[generic_country_data['Region'].str.contains('EUROPE', case = False)]
 
 print('successfully imported the datasets.')
@@ -82,7 +94,7 @@ print('successfully imported the datasets.')
 # 
 # ### 1. What are the five cities with the highest/lowest cost of living (incl. rent)?
 
-# In[252]:
+# In[5]:
 
 
 caption_column = 'City'
@@ -101,23 +113,23 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 
 # ## 2. What are the five happiest countries in Europe?
 
-# In[247]:
+# In[6]:
 
 
 index_column = "People with highest life satisfaction [%]"
-caption_column = 'country'
+caption_column = 'Country'
 
-life_satisfaction = life_satisfaction[[caption_column, index_column]]
-life_satisfaction = life_satisfaction.nlargest(5, index_column)
-life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True)
-life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column);
+top_countries_life_satisfaction = life_satisfaction[[caption_column, index_column]]
+top_countries_life_satisfaction = top_countries_life_satisfaction.nlargest(5, index_column)
+top_countries_life_satisfaction = top_countries_life_satisfaction.sort_values(index_column, ascending = True)
+top_countries_life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column);
 plt.show();
-display(life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
+display(top_countries_life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
 
 
 # ## 3. What are the European countries with the most coast line in relation to their area?
 
-# In[248]:
+# In[7]:
 
 
 index_column = "Coastline (coast/area ratio)"
@@ -132,34 +144,22 @@ plt.show();
 display(coastline_data.sort_values(index_column, ascending = False).style.hide_index())
 
 
-# ## 4. Is there a correlation between happyness and coastline?
+# ## 4. Is there a correlation between happiness and access to a coastline?
 
-# In[297]:
+# In[9]:
 
 
-coast_column = "Coastline (coast/area ratio)"
-country_column = 'Country'
+merged = pd.merge(generic_european_country_data, life_satisfaction, on = COUNTRY_COLUMN, how = 'inner')  
 
-coastline_data = generic_european_country_data[[caption_column, index_column]]
+coastline_data = generic_european_country_data[[COAST_COLUMN, COUNTRY_COLUMN]]
 
-# # select the top countries because we aren't interested in countries without
-# # a relevant coastline.
-# coastline_data = coastline_data.nlargest(15, index_column)
-
-# sort and add the sorted index as a column
-coastline_data = coastline_data.sort_values(index_column, ascending = True, ignore_index = True)
-# coastline_data['Country Index'] = coastline_data.index
-
-# sns.lineplot(x = 'Country Index', y = index_column, data = coastline_data);
-
+# sort by coast
+merged = merged.sort_values(COAST_COLUMN, ascending = True, ignore_index = True)
 
 ax = plt.gca()
-coastline_line = coastline_data.plot(kind='line', y = coast_column, x = 'Country' ,ax=ax)
+merged.plot(kind = 'line', y = COAST_COLUMN, x = COUNTRY_COLUMN ,ax=ax)
+merged.plot(kind = 'line', y = SATISFACTION_COLUMN, x = COUNTRY_COLUMN ,ax=ax)
 
-# coast_line, = plt.plot(x, np.sin(x), label=coast_column)
-# country_line, = plt.plot(x, np.cos(x), label=country_column)
-
-# plt.legend(handles=[coast_line, country_line, coastline_line], loc='best')
 plt.grid(b = True, color = 'aqua', alpha = 0.1, linestyle = 'dashdot')
 plt.show();
 
