@@ -36,7 +36,7 @@ get_ipython().system('conda install -c conda-forge --yes --prefix {sys.prefix} p
 
 # ### Library Import
 
-# In[96]:
+# In[251]:
 
 
 # load libraries and setup environment
@@ -82,7 +82,7 @@ print('successfully imported the datasets.')
 # 
 # ### 1. What are the five cities with the highest/lowest cost of living (incl. rent)?
 
-# In[173]:
+# In[252]:
 
 
 caption_column = 'City'
@@ -91,7 +91,7 @@ index_column = 'Cost of Living Plus Rent Index'
 def display_cost_of_living(costs, title):
     filtered_costs = costs[[caption_column, index_column]].sort_values(index_column, ascending = True)
     filtered_costs.plot.barh(title = title, x = caption_column, y = index_column)
-    plt.show()
+    plt.show();
     display(filtered_costs.sort_values(index_column, ascending = False).style.hide_index())
 
 # print the ten most expensive cities in the database in 2018
@@ -101,7 +101,7 @@ display_cost_of_living(cost_of_living.nsmallest(5, index_column), 'Smallest Rent
 
 # ## 2. What are the five happiest countries in Europe?
 
-# In[176]:
+# In[247]:
 
 
 index_column = "People with highest life satisfaction [%]"
@@ -110,14 +110,14 @@ caption_column = 'country'
 life_satisfaction = life_satisfaction[[caption_column, index_column]]
 life_satisfaction = life_satisfaction.nlargest(5, index_column)
 life_satisfaction = life_satisfaction.sort_values(index_column, ascending = True)
-life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column)
-plt.show()
+life_satisfaction.plot.barh(title = 'Percentage of satisfied people', x = caption_column, y = index_column);
+plt.show();
 display(life_satisfaction.sort_values(index_column, ascending = False).style.hide_index())
 
 
 # ## 3. What are the European countries with the most coast line in relation to their area?
 
-# In[200]:
+# In[248]:
 
 
 index_column = "Coastline (coast/area ratio)"
@@ -127,30 +127,41 @@ coastline_data = generic_european_country_data[[caption_column, index_column]]
 
 coastline_data = coastline_data.nlargest(5, index_column)
 coastline_data = coastline_data.sort_values(index_column, ascending = True)
-coastline_data.plot.barh(title = 'Countries with the most coast line in relation to their area', x = caption_column, y = index_column)
-plt.show()
+coastline_data.plot.barh(title = 'Countries with the most coast line in relation to their area', x = caption_column, y = index_column);
+plt.show();
 display(coastline_data.sort_values(index_column, ascending = False).style.hide_index())
 
 
 # ## 4. Is there a correlation between happyness and coastline?
 
-# In[242]:
+# In[297]:
 
 
-index_column = "Coastline (coast/area ratio)"
-caption_column = 'Country'
+coast_column = "Coastline (coast/area ratio)"
+country_column = 'Country'
 
 coastline_data = generic_european_country_data[[caption_column, index_column]]
 
-# select the top countries because we aren't interested in countries without
-# a relevant coastline.
-coastline_data = coastline_data.nlargest(15, index_column)
+# # select the top countries because we aren't interested in countries without
+# # a relevant coastline.
+# coastline_data = coastline_data.nlargest(15, index_column)
 
 # sort and add the sorted index as a column
-coastline_data.sort_values(index_column, ascending = True, inplace = True, ignore_index = True)
-coastline_data['index'] = coastline_data.index
+coastline_data = coastline_data.sort_values(index_column, ascending = True, ignore_index = True)
+# coastline_data['Country Index'] = coastline_data.index
 
-sns.lineplot(x = 'index', y = index_column, data = coastline_data)
+# sns.lineplot(x = 'Country Index', y = index_column, data = coastline_data);
+
+
+ax = plt.gca()
+coastline_line = coastline_data.plot(kind='line', y = coast_column, x = 'Country' ,ax=ax)
+
+# coast_line, = plt.plot(x, np.sin(x), label=coast_column)
+# country_line, = plt.plot(x, np.cos(x), label=country_column)
+
+# plt.legend(handles=[coast_line, country_line, coastline_line], loc='best')
+plt.grid(b = True, color = 'aqua', alpha = 0.1, linestyle = 'dashdot')
+plt.show();
 
 
 # ## References
